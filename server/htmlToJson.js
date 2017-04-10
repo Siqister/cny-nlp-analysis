@@ -32,6 +32,7 @@ function parseHtml(data){
 			reviewer:$(elem).find('.scrname').text().replace(/(\r\n|\n|\r)/gm,""),
 			location:$(elem).find('.location').text().replace(/(\r\n|\n|\r)/gm,""),
 			date:Date.parse( $(elem).find('.ratingDate').text().replace(/(\r\n|\n|\r)/gm,"").replace(/Reviewed /,'') ),
+			//FIXME: this is causing a parse error
 			//rating:+($(elem).find('.sprite-rating_s_fill').attr('alt').charAt(0)),
 			title:$(elem).find('.quote').text().replace(/(\r\n|\n|\r)/gm,""),
 			body:$(elem).find('.partial_entry').text().replace(/(\r\n|\n|\r)/gm,"")
@@ -41,11 +42,7 @@ function parseHtml(data){
 
 module.exports = function(urls){
 	return Promise.all(urls.map(processFile))
-		.then((res)=>{
-			return res.reduce((results,reviews)=>{
-				return results.concat(reviews);
-			},[])
-		});
+		.then(res => res.reduce( (results,reviews)=>results.concat(reviews),[] ) );
 }
 
 
