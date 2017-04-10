@@ -6,4 +6,9 @@ const urls = [
 	'../data/Charlestown Navy Yard (Boston, MA)_ Top Tips Before You Go - TripAdvisor - 5.html'
 ];
 
-module.exports = urls;
+const outputPath = '../data/output.json';
+
+module.exports = {
+	urls,
+	outputPath
+}

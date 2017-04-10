@@ -1,8 +1,6 @@
 'use strict';
 
-const p = require('./htmlToJson'),
-	Promise = require('promise');
-	
+const Promise = require('promise');
 
 //Set up google language API client
 //Installation guide: https://cloud.google.com/natural-language/docs/reference/libraries#client-libraries-install-nodejs
@@ -15,14 +13,17 @@ const client = Language({
 	keyFilename:'cny-text-analysis-412d7446c375.json'
 });
 
-client.annotate(text) //returns a Promise
-	.then((results)=>{
-		console.log(results[0].sentiment);
-		console.log(results[0].entities);
-	})
-	.catch((err)=>{
-		console.log(err);
-	});
+function nlpAnnotate(doc){
+	return client.annotate(doc.body)
+		.then((results)=>{
+			return Object.assign({},doc,results[0]);
+		})
+		.catch((err)=>{ console.log(err);});
+}
+
+module.exports = function(docs){
+	return Promise.all(docs.map(nlpAnnotate));
+}
 
 
 

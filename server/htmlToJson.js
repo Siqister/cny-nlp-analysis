@@ -4,9 +4,6 @@ const cheerio = require('cheerio'),
 	fs = require('fs'),
 	Promise = require('Promise');
 
-const urls = require('./config');
-
-
 function processFile(_url){
 	return loadFile(_url)
 		.then(parseHtml);
@@ -37,16 +34,18 @@ function parseHtml(data){
 			date:Date.parse( $(elem).find('.ratingDate').text().replace(/(\r\n|\n|\r)/gm,"").replace(/Reviewed /,'') ),
 			//rating:+($(elem).find('.sprite-rating_s_fill').attr('alt').charAt(0)),
 			title:$(elem).find('.quote').text().replace(/(\r\n|\n|\r)/gm,""),
-			text:$(elem).find('.partial_entry').text().replace(/(\r\n|\n|\r)/gm,"")
+			body:$(elem).find('.partial_entry').text().replace(/(\r\n|\n|\r)/gm,"")
 		}
 	}).toArray();
 }
 
-module.exports = Promise.all(urls.map(processFile))
-	.then((res)=>{
-		return res.reduce((results,reviews)=>{
-			return results.concat(reviews);
-		},[])
-	});
+module.exports = function(urls){
+	return Promise.all(urls.map(processFile))
+		.then((res)=>{
+			return res.reduce((results,reviews)=>{
+				return results.concat(reviews);
+			},[])
+		});
+}
 
 
