@@ -14,7 +14,7 @@ const client = Language({
 });
 
 function nlpAnnotate(doc){
-	return client.annotate(doc.body)
+	return client.annotate(doc.body,{encoding:'UTF8'})
 		.then((results)=>{
 			return Object.assign({},doc,results[0]);
 		})
